@@ -1,0 +1,87 @@
+package saakshiapplication;
+
+import java.util.Scanner;
+
+public class Creditcard {  
+
+    long ccNumber;
+
+    
+    public Creditcard(long ccNumber) {
+        this.ccNumber = ccNumber;  
+    }
+
+    
+    public void valid() {
+        if (!checkLen(ccNumber)) {
+            System.out.println("Invalid credit card number");
+            return;
+        }
+
+        int lastDigit = (int) (ccNumber % 10);  
+        long remainingNo = ccNumber / 10;        
+
+        remainingNo = reverse(remainingNo);
+        int sum = digSum(remainingNo);           
+        int expectedDigit = 10 - (lastDigit);    
+
+        if (expectedDigit == sum % 10) {        
+            System.out.println("Card is valid");
+        } else {
+            System.out.println("Card is invalid");
+        }
+    }
+
+    
+    boolean checkLen(long no) {
+        int c = 0;
+
+        while (no != 0) {
+            no = no / 10;  
+            c++;       
+        }
+
+        return c == 8 || c == 9;  
+    }
+
+   
+    int digSum(long no) {
+        int s = 0;
+        int pos = 0;
+
+        while (no > 0) {
+            int d = (int) (no % 10); 
+
+            if (pos % 2 != 0) {
+                d *= 2;  
+                if (d > 9) {
+                    d = (d / 10) + (d % 10);
+                }
+            }
+
+            s += d;  
+            no /= 10;      
+            pos++;         
+        }
+
+        return s;  
+    }
+
+    long reverse(long no) {
+        long reversed = 0;
+        while (no > 0) {
+            reversed = reversed * 10 + (no % 10);
+            no /= 10;
+        }
+        return reversed;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter your credit card number: ");
+        long ccNumber = sc.nextLong();
+
+        Creditcard obj = new Creditcard(ccNumber);  
+        obj.valid();                         
+    }
+}
