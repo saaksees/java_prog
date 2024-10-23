@@ -1,0 +1,71 @@
+package saakshiapplication;
+import java.util.Scanner;
+public class AlphabetWarGame {
+
+	public AlphabetWarGame() {
+	}
+	
+	public String AlphabetWar(String wo) {
+		int ls=0;
+		int rs=0;
+		int len= wo.length();
+		for( int i=0;i<len;i++) {
+			 char c=wo.charAt(i);
+			 ls= ls+ getls(c);
+			 rs=rs+ getrs(c);
+		}
+		return result(ls,rs);
+		
+	}
+
+	public String AlphabetWar(String lw,String rw) {
+		int ls=0;
+		int rs=0;
+		int rlen=rw.length();
+		int llen=lw.length();
+		for( int i=0;i<llen;i++) {
+			char c1=lw.charAt(i);
+			ls=ls+getls(c1);
+		}
+		for( int i=0;i<rlen;i++) {
+			char c2=rw.charAt(i);
+			rs=rs+getrs(c2);
+		}
+		return result(ls,rs);
+	}
+	 int getls(char l) {
+	    return (l == 'w') ? 4 :
+	           (l == 'p') ? 3 :
+	           (l == 'b') ? 2 :
+	           (l == 's') ? 1 : 0;
+	}
+	 int getrs(char r) {
+		 return (r== 'm') ? 4 :
+	           (r == 'q') ? 3 :
+	           (r == 'd') ? 2 :
+	           (r == 'z') ? 1 : 0;
+	 }
+	 public String result(int ls, int rs) {
+		 if(ls>rs) {
+			 return "left side wins";
+		 }
+		 else if(rs>ls){
+			 return "right side wins";
+		 }
+		 else {
+			 return "lets fight again";
+		 }
+	 }
+
+
+	public static void main(String[] args) {
+		Scanner sc= new Scanner(System.in);
+		System.out.println("Enter a word for Alphabet War:");
+		String  w=sc.nextLine();
+		AlphabetWarGame ob= new AlphabetWarGame();
+		System.out.println(ob.AlphabetWar(w));
+		
+
+	}
+
+}
