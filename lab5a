@@ -1,0 +1,75 @@
+
+ 
+package saakshiapplication;
+interface BankInterface{
+	abstract double getbal();
+	abstract double getintrest();
+	abstract void display();	
+}
+class BankA implements  BankInterface{
+
+	private double bal;
+	 public BankA(double balance) {
+	        this.bal = balance;
+	    }
+	public double getbal() {	
+		return bal;
+	}
+	public double getintrest() {	
+		return 7.0;
+	}
+	public void display() {
+		System.out.println("Bank A" + "Balance:" + getbal() + "Intrest rate:" + getintrest());
+		
+	}
+	
+}
+class BankB implements  BankInterface{
+	private double bal;
+	 public BankB(double balance) {
+	        this.bal = balance;
+	    }
+	public double getbal() {	
+		return bal;
+	}
+	public double getintrest() {	
+		return 7.4;
+	}
+	public void display() {
+		System.out.println("Bank B" + "Balance:" + getbal() + "Intrest rate:" + getintrest());
+		
+	}	
+}
+class BankC implements  BankInterface{
+	private double bal;
+	 public BankC(double balance) {
+	        this.bal = balance;
+	    }
+	public double getbal() {	
+		return bal;
+	}
+	public double getintrest() {	
+		return 7.9;
+	}
+	public void display() {
+		System.out.println("Bank C" + "Balance:" + getbal() + "Intrest rate:" + getintrest());
+		
+	}
+	
+}
+
+
+public class lab5a {
+
+	 
+	public static void main(String[] args) {
+		BankInterface b1= new BankA(10000);
+		BankInterface b2= new BankB(150000);
+		BankInterface b3= new BankC(200000);
+		b1.display();
+		b2.display();
+		b3.display();
+
+	}
+
+}
