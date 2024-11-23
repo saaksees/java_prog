@@ -1,0 +1,54 @@
+
+
+package saakshiapplication;
+
+interface WaterConservationSystem {
+    int calculateTrappedWater(int[] blockHeights);
+}
+abstract class RainySeasonConservation implements WaterConservationSystem {
+    public abstract int calculateTrappedWater(int[] blockHeights);
+}
+class CityBlockConservation extends RainySeasonConservation {
+    public int calculateTrappedWater(int[] blockHeights) {
+        if (blockHeights == null || blockHeights.length < 3) {
+            return 0;
+        }
+        int sum = 0;
+        int lMax = 0;
+        int rMax = 0;
+        int i = 0;
+        int j = blockHeights.length - 1;
+
+        while (i < j) {
+            lMax = Math.max(lMax, blockHeights[i]);
+            rMax = Math.max(rMax, blockHeights[j]);
+
+            if (lMax < rMax) {
+                sum =sum + (lMax - blockHeights[i]);
+                i++;
+            } else {
+                sum =sum + (rMax - blockHeights[j]);
+                j--;
+            }
+        }
+        return sum;
+    }
+}
+
+public class LAB5B {
+	public static void main(String[] args) {
+		
+		WaterConservationSystem ob = new CityBlockConservation();
+		int[] blockHeights1 = {3, 0, 0, 2, 0, 4};
+        System.out.println("Test Case 1 Output: " + ob.calculateTrappedWater(blockHeights1)); 
+
+       
+        int[] blockHeights2 = {3, 0, 2, 0, 4};
+        System.out.println("Test Case 2 Output: " + ob.calculateTrappedWater(blockHeights2)); 
+		
+
+		
+
+	}
+
+}
