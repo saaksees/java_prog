@@ -1,0 +1,172 @@
+package saakshiapplication;
+import java.util.*;
+
+//Cust class
+class Cust {
+ private int id;
+ private String name;
+ private int pts;
+
+ public Cust(int id, String name, int pts) {
+     this.id = id;
+     this.name = name;
+     this.pts = pts;
+ }
+
+ public int getId() {
+     return id;
+ }
+
+ public String getName() {
+     return name;
+ }
+
+ public int getPts() {
+     return pts;
+ }
+
+ @Override
+ public String toString() {
+     return "Cust{id=" + id + ", name='" + name + "', pts=" + pts + '}';
+ }
+}
+
+//Prod class
+class Prod {
+ private int id;
+ private String name;
+ private double price;
+
+ public Prod(int id, String name, double price) {
+     this.id = id;
+     this.name = name;
+     this.price = price;
+ }
+
+ public int getId() {
+     return id;
+ }
+
+ public String getName() {
+     return name;
+ }
+
+ public double getPrice() {
+     return price;
+ }
+
+ @Override
+ public String toString() {
+     return "Prod{id=" + id + ", name='" + name + "', price=" + price + '}';
+ }
+}
+
+//Ord class
+class Ord {
+ private int id;
+ private int custId;
+ private String date;
+
+ public Ord(int id, int custId, String date) {
+     this.id = id;
+     this.custId = custId;
+     this.date = date;
+ }
+
+ public int getId() {
+     return id;
+ }
+
+ public int getCustId() {
+     return custId;
+ }
+
+ public String getDate() {
+     return date;
+ }
+
+ @Override
+ public String toString() {
+     return "Ord{id=" + id + ", custId=" + custId + ", date='" + date + "'}";
+ }
+}
+
+public class AmazonApp {
+ public static void main(String[] args) {
+     // HashMap for storing customers and products
+     HashMap<Integer, Cust> custMap = new HashMap<>();
+     custMap.put(1, new Cust(1, "Saakshi", 100));
+     custMap.put(2, new Cust(2, "Rishabh", 200));
+
+     HashMap<Integer, Prod> prodMap = new HashMap<>();
+     prodMap.put(1, new Prod(1, "Iphone", 1500));
+     prodMap.put(2, new Prod(2, "pS5", 800));
+
+     // Orders with unique products for each customer using HashSet
+     HashMap<Integer, HashSet<Prod>> custProds = new HashMap<>();
+     custProds.put(1, new HashSet<>(Arrays.asList(prodMap.get(1))));
+     custProds.put(2, new HashSet<>(Arrays.asList(prodMap.get(2))));
+
+     // Sample orders
+     List<Ord> ords = Arrays.asList(
+         new Ord(1, 1, "2024-12-15"),
+         new Ord(2, 2, "2024-12-16")
+     );
+
+     TreeSet<Prod> sortedProds = new TreeSet<>(Comparator.comparingDouble(Prod::getPrice));
+     sortedProds.addAll(prodMap.values());
+
+     TreeSet<Cust> sortedCusts = new TreeSet<>(Comparator.comparingInt(Cust::getPts).reversed());
+     sortedCusts.addAll(custMap.values());
+
+     Scanner sc = new Scanner(System.in);
+     int ch;
+     do {
+         System.out.println("\n--- Menu ---");
+         System.out.println("1. Show Custs");
+         System.out.println("2. Show Prods");
+         System.out.println("3. Show Ords");
+         System.out.println("4. Show Prods by Price");
+         System.out.println("5. Show Custs by Pts");
+         System.out.println("6. Show Cust's Prods");
+         System.out.println("7. Exit");
+         System.out.print("Enter your choice: ");
+         ch = sc.nextInt();
+
+         switch (ch) {
+             case 1:
+                 custMap.values().forEach(System.out::println);
+                 break;
+             case 2:
+                 prodMap.values().forEach(System.out::println);
+                 break;
+             case 3:
+                 ords.forEach(System.out::println);
+                 break;
+             case 4:
+                 sortedProds.forEach(System.out::println);
+                 break;
+             case 5:
+                 sortedCusts.forEach(System.out::println);
+                 break;
+             case 6:
+                 System.out.print("Enter Cust ID: ");
+                 int custId = sc.nextInt();
+                 HashSet<Prod> prods = custProds.get(custId);
+                 if (prods != null) {
+                     prods.forEach(System.out::println);
+                 } else {
+                     System.out.println("No Prods found for this Cust.");
+                 }
+                 break;
+             case 7:
+                 System.out.println("Exiting. Goodbye!");
+                 break;
+             default:
+                 System.out.println("Invalid choice. Try again.");
+         }
+     } while (ch != 7);
+
+     sc.close();
+ }
+}
