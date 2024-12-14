@@ -2,7 +2,6 @@ package saakshiapplication;
 
 import java.util.*;
 
-// Cust class
 class Cust {
     private int id;
     private String name;
@@ -32,7 +31,6 @@ class Cust {
     }
 }
 
-// Prod class
 class Prod {
     private int id;
     private String name;
@@ -62,7 +60,6 @@ class Prod {
     }
 }
 
-// Ord class
 class Ord {
     private int id;
     private int custId;
@@ -92,111 +89,121 @@ class Ord {
     }
 }
 
-// Comparator classes
-class ProductComparators {
-    public static Comparator<Prod> byPriceAscending() {
-        return Comparator.comparingDouble(Prod::getPrice);
-    }
-
-    public static Comparator<Prod> byPriceDescending() {
-        return Comparator.comparingDouble(Prod::getPrice).reversed();
-    }
-
-    public static Comparator<Prod> byName() {
-        return Comparator.comparing(Prod::getName);
+class ProdPriceComparator implements Comparator<Prod> {
+    @Override
+    public int compare(Prod p1, Prod p2) {
+        return Double.compare(p1.getPrice(), p2.getPrice());
     }
 }
 
-class OrderComparators {
-    public static Comparator<Ord> byDate() {
-        return Comparator.comparing(Ord::getDate);
+class ProdNameComparator implements Comparator<Prod> {
+    @Override
+    public int compare(Prod p1, Prod p2) {
+        return p1.getName().compareTo(p2.getName());
     }
 }
 
-class CustomerComparators {
-    public static Comparator<Cust> byPointsDescending() {
-        return Comparator.comparingInt(Cust::getPts).reversed();
+class OrdDateComparator implements Comparator<Ord> {
+    @Override
+    public int compare(Ord o1, Ord o2) {
+        return o1.getDate().compareTo(o2.getDate());
     }
+}
 
-    public static Comparator<Cust> byName() {
-        return Comparator.comparing(Cust::getName);
+class CustPointsComparator implements Comparator<Cust> {
+    @Override
+    public int compare(Cust c1, Cust c2) {
+        return Integer.compare(c2.getPts(), c1.getPts());
     }
 }
 
 public class AmazonApp {
     public static void main(String[] args) {
-        // HashMaps for storing customers and products
-        HashMap<Integer, Cust> custMap = new HashMap<>();
-        custMap.put(1, new Cust(1, "Saakshi", 100));
-        custMap.put(2, new Cust(2, "Rishabh", 200));
+        TreeSet<Cust> customers = new TreeSet<>(new CustPointsComparator());
+        customers.add(new Cust(1, "Saakshi", 100));
+        customers.add(new Cust(2, "Rishabh", 200));
+        customers.add(new Cust(3, "Arjun", 150));
 
-        HashMap<Integer, Prod> prodMap = new HashMap<>();
-        prodMap.put(1, new Prod(1, "Iphone", 1500));
-        prodMap.put(2, new Prod(2, "PS5", 800));
+        TreeSet<Prod> products = new TreeSet<>(new ProdPriceComparator());
+        products.add(new Prod(1, "Iphone", 1500));
+        products.add(new Prod(2, "PS5", 800));
+        products.add(new Prod(3, "Laptop", 1200));
 
-        // Orders with unique products for each customer using HashSet
-        HashMap<Integer, HashSet<Prod>> custProds = new HashMap<>();
-        custProds.put(1, new HashSet<>(Arrays.asList(prodMap.get(1))));
-        custProds.put(2, new HashSet<>(Arrays.asList(prodMap.get(2))));
-
-        // Sample orders
-        List<Ord> ords = Arrays.asList(
-            new Ord(1, 1, "2024-12-15"),
-            new Ord(2, 2, "2024-12-16")
-        );
+        TreeSet<Ord> orders = new TreeSet<>(new OrdDateComparator());
+        orders.add(new Ord(1, 1, "2024-12-15"));
+        orders.add(new Ord(2, 2, "2024-12-16"));
+        orders.add(new Ord(3, 3, "2024-12-14"));
 
         Scanner sc = new Scanner(System.in);
         int ch;
         do {
             System.out.println("\n--- Menu ---");
-            System.out.println("1. Show Customers");
-            System.out.println("2. Show Products");
-            System.out.println("3. Show Orders");
-            System.out.println("4. Sort Products by Price (Ascending)");
-            System.out.println("5. Sort Products by Name");
-            System.out.println("6. Sort Orders by Date");
-            System.out.println("7. Sort Customers by Points (Descending)");
-            System.out.println("8. Exit");
+            System.out.println("1. Show Customers sorted by Points");
+            System.out.println("2. Show Products sorted by Price");
+            System.out.println("3. Show Products sorted by Name");
+            System.out.println("4. Show Orders sorted by Date");
+            System.out.println("5. Show Customer Details by ID");
+            System.out.println("6. Show Product Details by ID");
+            System.out.println("7. Exit");
             System.out.print("Enter your choice: ");
             ch = sc.nextInt();
 
             switch (ch) {
                 case 1:
-                    custMap.values().forEach(System.out::println);
+                    System.out.println("\nCustomers sorted by Points (Descending):");
+                    customers.forEach(System.out::println);
                     break;
                 case 2:
-                    prodMap.values().forEach(System.out::println);
+                    System.out.println("\nProducts sorted by Price (Ascending):");
+                    products.forEach(System.out::println);
                     break;
                 case 3:
-                    ords.forEach(System.out::println);
+                    System.out.println("\nProducts sorted by Name:");
+                    TreeSet<Prod> productsByName = new TreeSet<>(new ProdNameComparator());
+                    productsByName.addAll(products);
+                    productsByName.forEach(System.out::println);
                     break;
                 case 4:
-                    prodMap.values().stream()
-                        .sorted(ProductComparators.byPriceAscending())
-                        .forEach(System.out::println);
+                    System.out.println("\nOrders sorted by Date:");
+                    orders.forEach(System.out::println);
                     break;
                 case 5:
-                    prodMap.values().stream()
-                        .sorted(ProductComparators.byName())
-                        .forEach(System.out::println);
+                    System.out.print("Enter Customer ID: ");
+                    int custId = sc.nextInt();
+                    boolean foundCustomer = false;
+                    for (Cust cust : customers) {
+                        if (cust.getId() == custId) {
+                            System.out.println("\nCustomer Details: " + cust);
+                            foundCustomer = true;
+                            break;
+                        }
+                    }
+                    if (!foundCustomer) {
+                        System.out.println("Customer not found.");
+                    }
                     break;
                 case 6:
-                    ords.stream()
-                        .sorted(OrderComparators.byDate())
-                        .forEach(System.out::println);
+                    System.out.print("Enter Product ID: ");
+                    int prodId = sc.nextInt();
+                    boolean foundProduct = false;
+                    for (Prod prod : products) {
+                        if (prod.getId() == prodId) {
+                            System.out.println("\nProduct Details: " + prod);
+                            foundProduct = true;
+                            break;
+                        }
+                    }
+                    if (!foundProduct) {
+                        System.out.println("Product not found.");
+                    }
                     break;
                 case 7:
-                    custMap.values().stream()
-                        .sorted(CustomerComparators.byPointsDescending())
-                        .forEach(System.out::println);
-                    break;
-                case 8:
                     System.out.println("Exit.");
                     break;
                 default:
                     System.out.println("Invalid choice");
             }
-        } while (ch != 8);
+        } while (ch != 7);
 
         sc.close();
     }
